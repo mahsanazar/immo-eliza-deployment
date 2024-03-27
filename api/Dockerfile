@@ -1,17 +1,24 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9
+FROM python:3.11-slim
 
-# Set the working directory in the container
+# Set the working directory to /app
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy all contents into the container at /app
+COPY ./api ./app
 
-# Install any needed packages specified in requirements.txt
-RUN pip install numpy pandas scikit-learn catboost fastapi uvicorn joblib
+# Create and activate a virtual environment
+RUN python -m venv venv
+ENV PATH="/app/venv/bin:$PATH"
+
+# Copy the trained model file into the container
+COPY Updated_trained_catboost_model.pkl .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose port 8000 to the outside world
 EXPOSE 8000
 
 # Command to run your application using uvicorn
-CMD ["uvicorn", "--host", "0.0.0.0", "--port", "8000", "--reload", "api.app:app"]
+CMD ["uvicorn", "--host", "0.0.0.0", "--port", "8000", "--reload", "app:app"]

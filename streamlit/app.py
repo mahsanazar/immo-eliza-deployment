@@ -2,66 +2,58 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder
-
-# Load the trained CatBoost model
-model_path = 'C:\\Users\\afshi\\Documents\\GitHub\\immo-eliza-deployment\\streamlit\\trained_catboost_model.pkl'
-catboost_model = joblib.load(model_path)
 
 # Function to preprocess data and make predictions
 def preprocess_data(data):
-    # Define numerical, binary, and categorical features
-    numerical_features = ["cadastral_income", "surface_land_sqm", "total_area_sqm", "construction_year", 
-                          "latitude", "longitude", "garden_sqm", "primary_energy_consumption_sqm",  
-                          "nbr_frontages", "nbr_bedrooms", "terrace_sqm"]
-    fl_features = ["fl_garden", "fl_furnished", "fl_open_fire", "fl_terrace", "fl_swimming_pool", 
-                   "fl_floodzone", "fl_double_glazing"]
-    cat_features = ['property_type', 'subproperty_type', 'region', 'province', 'locality', 'zip_code', 
-                    'state_building', 'epc', 'heating_type', 'equipped_kitchen']
+    # Extract features from artifacts
+    cat_features = artifacts['features']['cat_features']
+    numerical_features = artifacts['features']['num_features']
+    fl_features = artifacts['features']['fl_features']
+    encoder = artifacts['enc']
     
-    # Preprocess numerical and binary features
+    # Preprocess numerical features
     numerical_data = data[numerical_features].values
-    binary_data = data[fl_features].values
-
-    # Initialize OneHotEncoder
-    encoder = OneHotEncoder(handle_unknown='ignore')
     
-    # One-hot encode categorical features
-    encoded_features = encoder.fit_transform(data[cat_features]).toarray()
+    # Preprocess binary features (if any)
+    binary_data = data[fl_features].values
+    
+    # One-hot encode categorical features using the loaded encoder
+    encoded_features = encoder.transform(data[cat_features]).toarray()
 
-    # Concatenate numerical, binary, and encoded categorical features
+    # Combine all features
     X = np.concatenate([numerical_data, binary_data, encoded_features], axis=1)
     
     return X
+
+# Load the trained model and artifacts
+artifacts = joblib.load('C:\Users\afshi\Documents\GitHub\immo-eliza-deployment\streamlit\trained_catboost_model.pklU')
+catboost_model = artifacts['model']
 
 # Streamlit UI
 st.title('House Price Prediction')
 st.write('Enter the details of the house for price prediction:')
 
-# Input fields for numerical features
-cadastral_income = st.number_input('Cadastral Income', value=0)
-surface_land_sqm = st.number_input('Surface Land (sqm)', value=0)
-total_area_sqm = st.number_input('Total Area (sqm)', value=0)
+# Input fields for features
+cadastral_income = st.number_input('Cadastral Income', value=0.0)
+surface_land_sqm = st.number_input('Surface Land (sqm)', value=0.0)
+total_area_sqm = st.number_input('Total Area (sqm)', value=0.0)
 construction_year = st.number_input('Construction Year', value=0)
-latitude = st.number_input('Latitude', value=0)
-longitude = st.number_input('Longitude', value=0)
-garden_sqm = st.number_input('Garden (sqm)', value=0)
-primary_energy_consumption_sqm = st.number_input('Primary Energy Consumption (sqm)', value=0)
+latitude = st.number_input('Latitude', value=0.0)
+longitude = st.number_input('Longitude', value=0.0)
+garden_sqm = st.number_input('Garden (sqm)', value=0.0)
+primary_energy_consumption_sqm = st.number_input('Primary Energy Consumption (sqm)', value=0.0)
 nbr_frontages = st.number_input('Number of Frontages', value=0)
 nbr_bedrooms = st.number_input('Number of Bedrooms', value=0)
-terrace_sqm = st.number_input('Terrace (sqm)', value=0)
+terrace_sqm = st.number_input('Terrace (sqm)', value=0.0)
 
-# Input fields for binary features
-fl_garden = st.checkbox('Garden')
-fl_furnished = st.checkbox('Furnished')
-fl_open_fire = st.checkbox('Open Fire')
-fl_terrace = st.checkbox('Terrace')
-fl_swimming_pool = st.checkbox('Swimming Pool')
-fl_floodzone = st.checkbox('Floodzone')
-fl_double_glazing = st.checkbox('Double Glazing')
+fl_garden = st.radio('Garden', [0, 1])
+fl_furnished = st.radio('Furnished', [0, 1])
+fl_open_fire = st.radio('Open Fire', [0, 1])
+fl_terrace = st.radio('Terrace', [0, 1])
+fl_swimming_pool = st.radio('Swimming Pool', [0, 1])
+fl_floodzone = st.radio('Floodzone', [0, 1])
+fl_double_glazing = st.radio('Double Glazing', [0, 1])
 
-# Input fields for categorical features
 property_type = st.selectbox('Property Type', ['House', 'Apartment', 'Villa'])
 subproperty_type = st.selectbox('Subproperty Type', ['Studio', 'Duplex', 'Penthouse'])
 region = st.text_input('Region')
@@ -71,7 +63,7 @@ zip_code = st.text_input('Zip Code')
 state_building = st.selectbox('State of Building', ['New', 'To renovate', 'Good'])
 epc = st.selectbox('EPC', ['A', 'B', 'C', 'D', 'E', 'F', 'G'])
 heating_type = st.selectbox('Heating Type', ['Gas', 'Electric', 'Oil', 'Other'])
-equipped_kitchen = st.checkbox('Equipped Kitchen')
+equipped_kitchen = st.selectbox('Equipped Kitchen', ['Yes', 'No'])
 
 # Combine inputs into a DataFrame
 input_data = pd.DataFrame({
@@ -113,4 +105,3 @@ if st.button('Predict'):
     prediction = catboost_model.predict(X_input)
     # Display the prediction
     st.write(f'Predicted Price: {prediction}')
-
