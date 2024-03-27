@@ -12,7 +12,7 @@ RUN python -m venv venv
 ENV PATH="/app/venv/bin:$PATH"
 
 # Copy the trained model file into the container
-COPY C:\\Users\\afshi\\Documents\\GitHub\\immo-eliza-deployment\\api\\Updated_trained_catboost_model.pkl /app
+COPY api/Updated_trained_catboost_model.pkl /app
 
 
 # Install dependencies
