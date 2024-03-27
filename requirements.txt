@@ -1,0 +1,4 @@
+fastapi
+pydantic
+uvicorn==0.15.0
+joblib 
