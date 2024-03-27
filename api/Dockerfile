@@ -5,17 +5,18 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy the contents of the api directory into the container at /app
-COPY ./api/ .
+COPY ./requirements.txt /app/requirements.txt
+
 
 # Create and activate a virtual environment
 RUN python -m venv venv
 ENV PATH="/app/venv/bin:$PATH"
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r app/requirements.txt
 
 # Copy the trained model file into the container
-COPY api/Updated_trained_catboost_model.pkl .
+COPY ./api app/api
 
 # Expose port 8000 to the outside world
 EXPOSE 8000
