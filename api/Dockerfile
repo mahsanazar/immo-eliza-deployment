@@ -5,7 +5,8 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy all contents into the container at /app
-COPY . /app
+COPY . .
+
 
 # Create and activate a virtual environment
 RUN python -m venv venv
