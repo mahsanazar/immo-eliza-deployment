@@ -68,8 +68,9 @@ The API is built using FastAPI framework. It exposes an endpoint `/predict` that
 
 ## Demo
 
-You can find a live demo of the deployed API at [https://immo-eliza-deployment-31.onrender.com](https://immo-eliza-deployment-31.onrender.com)(https://immo-eliza-deployment-31.onrender.com/docs#/default/predict_predict_post) 
+You can find a live demo of the deployed API at [https://immo-eliza-deployment-31.onrender.com](https://immo-eliza-deployment-31.onrender.com) ([https://immo-eliza-deployment-31.onrender.com/docs#/default/predict_predict_post](https://immo-eliza-deployment-31.onrender.com/docs#/default/predict_predict_post)). 
 Feel free to explore the API and make predictions using the provided input features.
 
 ## Author
 - [Mahsa Nazarian](https://github.com/mahsanazar)
+
