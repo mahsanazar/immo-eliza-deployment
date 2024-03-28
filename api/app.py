@@ -15,7 +15,8 @@ app = FastAPI(
 # Load the trained model
 
 # Load the model artifacts using joblib
-artifacts = joblib.load("C:\\Users\\afshi\\Documents\\GitHub\\immo-eliza-deployment\\api\\Updated_trained_catboost_model.pkl")
+# artifacts = joblib.load("C:/Users\\afshi\\Documents\\GitHub\\immo-eliza-deployment\\api\\Updated_trained_catboost_model.pkl")
+artifacts = joblib.load("Updated_trained_catboost_model.pkl")
 
 # Unpack the artifacts
 num_features = artifacts["features"]["num_features"]
