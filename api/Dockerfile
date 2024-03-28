@@ -13,7 +13,7 @@ COPY . /app
 RUN pip install --upgrade pip
 
 # Install dependencies from "requirements.txt"
-RUN pip install -r requirements.tx
+RUN pip install -r requirements.txt
 
 # Create and activate a virtual environment
 RUN python -m venv venv
