@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the application code into the container at /app
 COPY . .
 # Copy the trained model file into the container
-COPY api/Updated_trained_catboost_model.pkl .
+COPY Updated_trained_catboost_model.pkl .
 
 # Expose port 8000 to the outside world
 EXPOSE 8000
